@@ -1,11 +1,12 @@
-//Max Potter
+//@author Max Potter
 public class Graph
 {
     public boolean[][] adjacencyMatrix;
-    public Node[] degreeCount;
+    public Node[] nodes;
     
     public Graph(int numberOfNodes)
     {
+    	//Initialize the matrix.
         adjacencyMatrix = new boolean[numberOfNodes][numberOfNodes];
         for(boolean[] edgeStart : adjacencyMatrix)
         {
@@ -15,11 +16,12 @@ public class Graph
             }
         }
         
-        degreeCount = new Node[numberOfNodes];
+        //Initialize the nodes array.
+        nodes = new Node[numberOfNodes];
         for(int nodeNumber = 0; nodeNumber < numberOfNodes; nodeNumber++)
         {
-        	degreeCount[nodeNumber].nodeNumber = nodeNumber;
-        	degreeCount[nodeNumber].degree = 0;
+        	nodes[nodeNumber].nodeNumber = nodeNumber;
+        	nodes[nodeNumber].degree = 0;
         }
     }
     
@@ -28,16 +30,18 @@ public class Graph
     	//If this edge does not exist already...
     	if(!adjacencyMatrix[edgeStart][edgeEnd])
     	{
-    		//Add the edge and update the degree counts.
+    		//...add the edge and update the degree counts.
+    		//Create the edge twice so that it can be accessed with the 
+    		//edgeStart and edgeEnd in either order.
         	adjacencyMatrix[edgeStart][edgeEnd] = true;
         	adjacencyMatrix[edgeEnd][edgeStart] = true;
-        	degreeCount[edgeStart].degree++;
-        	degreeCount[edgeEnd].degree++;
+        	nodes[edgeStart].degree++;
+        	nodes[edgeEnd].degree++;
         }
     }
     
     public Node[] getNodes()
     {
-    	return degreeCount;
+    	return nodes;
     }
 }
