@@ -10,10 +10,6 @@ public class Blobworld {
 
 	private static Graph graph;
 
-	/**
-	 * This class method was coded all by Seth Corbin.
-	 * @author Seth Corbin
-	 */
 	public static void main(String[] args) {
 		
 		Scanner input = new Scanner(System.in);
@@ -38,7 +34,6 @@ public class Blobworld {
 
 		Node[] nodes = graph.getNodes();
 		sortAscending(nodes);
-
 
 
 	}
