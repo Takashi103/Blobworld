@@ -1,14 +1,14 @@
-
-
 import java.util.Scanner;
 
 /**
  * This class handles the problem solving of the Blobworld problem.
  * @author Seth Corbin
+ * @author Max Potter
+ * @author Wyatt Fegley
  */
 public class Blobworld {
 
-	private Graph graph;
+	private static Graph graph;
 
 	/**
 	 * This class method was coded all by Seth Corbin.
@@ -32,10 +32,9 @@ public class Blobworld {
 		}
 
 		findSolution();
-
 	}
 
-	public void findSolution() {
+	public static void findSolution() {
 
 		Node[] nodes = graph.getNodes();
 		sortAscending(nodes);
@@ -44,12 +43,12 @@ public class Blobworld {
 
 	}
 
-	public void sortAscending(Node[] arr) {
+	public static void sortAscending(Node[] arr) {
 		for(int i = 1; i < arr.length; i++) {
 			Node currentNode = arr[i];
 			int j = i - 1;
 			for(; j >= 0; j--) {
-				if(arr[j] > currentNode)
+				if(arr[j].degree > currentNode.degree)
 					arr[j+1] = arr[j];
 			}
 			arr[j] = currentNode;
