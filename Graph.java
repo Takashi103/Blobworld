@@ -1,4 +1,9 @@
-//@author Max Potter
+/**
+ * Graph Object
+ * @author Seth Corbin
+ * @author Max Potter
+ * @author Wyatt Fegley
+ */
 public class Graph
 {
     public boolean[][] adjacencyMatrix;
