@@ -45,6 +45,7 @@ public class Graph
         }
     }
     
+    
     public Node[] getNodes()
     {
     	return nodes;
