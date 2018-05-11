@@ -1,5 +1,4 @@
-import java.util.Scanner;
-import java.util.PriorityQueue;
+import java.util.*;
 
 // TODO : change Nodes from node[] to PriorityQueue
 
@@ -14,14 +13,19 @@ public class Blobworld {
 	private static Graph graph;
 
 	private static boolean[] available;
+	
+	private static ArrayList<Node> blobsToSend;
 
 	public static void main(String[] args) {
 		
 		Scanner input = new Scanner(System.in);
 
+        //Store the number of blobs.
 		int n = input.nextInt();
-
+        
+        //Initialize the variables.;
 		graph = new Graph(n);
+		blobsToSend = new ArrayList<Node>(n);
 
 		while(input.hasNextInt()) {
 
@@ -40,11 +44,30 @@ public class Blobworld {
 
 		findSolution();
 	}
-
-	public static void findSolution() {
-
+	
+	//Fills the blobsToSend list with the blobs that should be sent then sorts the list.
+	public static void findSolution() 
+	{
 		Node[] nodeArray = graph.getNodes();
-
+        sortAscending(nodeArray);
+        for(int i = 0; i < nodeArray.length; i++)
+        {
+            if(available[i])
+            {
+               	blobsToSend.add(nodeArray[i]);
+            	//available[i] does not need to be set to false because it will never be visited again.
+               	//Scan through the adjacency matrix and set all adjacent nodes to unavailable.
+               	for(int j = 0; j < graph.adjacencyMatrix[i].length; j++)
+               	{
+               		if(graph.adjacencyMatrix[j])
+               		{
+						available[j] = false;
+					}
+               	}
+            }
+        }
+        
+        sortAscending(blobsToSend);
 
 	}
 
