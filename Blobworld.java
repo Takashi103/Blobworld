@@ -1,4 +1,7 @@
 import java.util.Scanner;
+import java.util.PriorityQueue;
+
+// TODO : change Nodes from node[] to PriorityQueue
 
 /**
  * This class handles the problem solving of the Blobworld problem.
@@ -9,6 +12,8 @@ import java.util.Scanner;
 public class Blobworld {
 
 	private static Graph graph;
+
+	private static boolean[] available;
 
 	public static void main(String[] args) {
 		
@@ -27,13 +32,18 @@ public class Blobworld {
 
 		}
 
+		available = new boolean[n];
+
+		for(int i = 0; i < available.length; i++) {
+			available[i] = true;
+		}
+
 		findSolution();
 	}
 
 	public static void findSolution() {
 
-		Node[] nodes = graph.getNodes();
-		sortAscending(nodes);
+		Node[] nodeArray = graph.getNodes();
 
 
 	}
