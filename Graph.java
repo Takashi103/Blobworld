@@ -33,7 +33,7 @@ public class Graph
     public void addEdge(int edgeStart, int edgeEnd)
     {
     	//If this edge does not exist already...
-    	if(!adjacencyMatrix[edgeStart][edgeEnd])
+    	if(!adjacencyMatrix[edgeStart][edgeEnd] && !adjacencyMatrix[edgeEnd][edgeStart])
     	{
     		//...add the edge and update the degree counts.
     		//Create the edge twice so that it can be accessed with the 
