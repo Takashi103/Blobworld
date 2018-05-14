@@ -23,19 +23,8 @@ public class Blobworld {
         //Store the number of blobs.
 		int n = input.nextInt();
         
-        //Initialize the variables.;
+        //Initialize the variables.
 		graph = new Graph(n);
-		blobsToSend = new ArrayList<Node>(n);
-
-		while(input.hasNextInt()) {
-
-			int startNode = input.nextInt();
-			int endNode = input.nextInt();
-
-			graph.addEdge(startNode, endNode);
-
-		}
-
 		available = new boolean[n];
 
 		for(int i = 0; i < available.length; i++) {
@@ -49,7 +38,7 @@ public class Blobworld {
 	public static void findSolution() 
 	{
 		Node[] nodeArray = graph.getNodes();
-        sortAscending(nodeArray);
+       	Collections.sort(nodeArray);
         for(int i = 0; i < nodeArray.length; i++)
         {
             if(available[i])
@@ -59,15 +48,17 @@ public class Blobworld {
                	//Scan through the adjacency matrix and set all adjacent nodes to unavailable.
                	for(int j = 0; j < graph.adjacencyMatrix[i].length; j++)
                	{
-               		if(graph.adjacencyMatrix[j])
+               		if(graph.adjacencyMatrix[i][j])
                		{
 						available[j] = false;
+						updateAdjacentDegrees(graph.Nodes[j]);
 					}
                	}
+               	updateAdjacentDegrees(nodeArray[i]);
             }
         }
         
-        sortAscending(blobsToSend);
+       	Collections.sort(blobsToSend);
 
 	}
 
@@ -82,4 +73,52 @@ public class Blobworld {
 			arr[j] = currentNode;
 		}
 	}
+	
+	/*public static void sortAscending(ArrayList<Node> arr) {
+		for(int i = 1; i < arr.size(); i++) {
+			Node currentNode = arr.get(i);
+			int j = i - 1;
+			for(; j >= 0; j--) {
+				if(arr.get(j).degree > currentNode.degree)
+					arr.get(j+1) = arr.get(j);
+			}
+			arr.get(j) = currentNode;
+		}
+	}*/
+    
+    public static void updateAdjacentDegrees(Node node)
+	{
+		for(int i = 0; i < nodeArray.length; i++)
+		{
+			//If this node is adjacent to the now unavailable node, decrease its degree by one.
+			if(graph.adjacencyMatrix[node.nodeNumber][i])
+			{
+				graph.Nodes[i].degree--;
+			}
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
