@@ -1,53 +1,75 @@
+import java.util.ArrayList;
+
 /**
  * Graph Object
  * @author Seth Corbin
  * @author Max Potter
  * @author Wyatt Fegley
  */
-public class Graph
-{
-    public boolean[][] adjacencyMatrix;
-    public Node[] nodes;
-    
-    public Graph(int numberOfNodes)
-    {
-    	//Initialize the matrix.
-        adjacencyMatrix = new boolean[numberOfNodes][numberOfNodes];
-        for(boolean[] edgeStart : adjacencyMatrix)
-        {
-            for(int edgeEnd = 0; edgeEnd < numberOfNodes; edgeEnd++)
-            {
-                edgeStart[edgeEnd] = false;
-            }
-        }
-        
-        //Initialize the nodes array.
-        nodes = new Node[numberOfNodes];
-        for(int nodeNumber = 0; nodeNumber < numberOfNodes; nodeNumber++)
-        {
-        	nodes[nodeNumber].nodeNumber = nodeNumber;
-        	nodes[nodeNumber].degree = 0;
-        }
-    }
-    
-    public void addEdge(int edgeStart, int edgeEnd)
-    {
-    	//If this edge does not exist already...
-    	if(!adjacencyMatrix[edgeStart][edgeEnd] && !adjacencyMatrix[edgeEnd][edgeStart])
-    	{
-    		//...add the edge and update the degree counts.
-    		//Create the edge twice so that it can be accessed with the 
-    		//edgeStart and edgeEnd in either order.
-        	adjacencyMatrix[edgeStart][edgeEnd] = true;
-        	adjacencyMatrix[edgeEnd][edgeStart] = true;
-        	nodes[edgeStart].degree++;
-        	nodes[edgeEnd].degree++;
-        }
-    }
-    
-    
-    public Node[] getNodes()
-    {
-    	return nodes;
-    }
+public class Graph  {
+
+	public boolean[][] adjacencyMatrix;
+	public int[][] adjacencyList;
+
+	public Node[] nodes;
+
+	public boolean useList = true;
+
+	public Graph(int numberOfNodes) {
+
+		//Initialize the Node Array.
+		nodes = new Node[numberOfNodes];
+		//Create all the Nodes.
+		for(int i = 0; i < numberOfNodes; i++)
+			node[i] = new Node[i];
+
+		//Initialize the matrix.
+		adjacencyMatrix = new boolean[numberOfNodes][numberOfNodes];
+		//Set all edges to false.
+		for(int i = 0; i < numberOfNodes; i++)
+			for(int j = 0; j < numberOfNodes; j++)
+				adjacencyMatrix[i][j] = false;
+
+		Scanner input = new Scanner(System.in);
+
+		while(input.hasNextInt()) {
+
+			int startNode = input.nextInt();
+			int endNode = input.nextInt();
+
+			//If this edge does not exist already...
+			if(!adjacencyMatrix[edgeStart][edgeEnd] && !adjacencyMatrix[edgeEnd][edgeStart]) {
+				//...add the edge and update the degree counts.
+				//Create the edge twice so that it can be accessed with the 
+				//edgeStart and edgeEnd in either order.
+				adjacencyMatrix[edgeStart][edgeEnd] = true;
+				adjacencyMatrix[edgeEnd][edgeStart] = true;
+				nodes[edgeStart].degree++;
+				nodes[edgeEnd].degree++;
+			}
+		}
+
+		input.close();
+
+		//Initialize the List.
+		adjacencyList = new int[][numberOfNodes];
+		for(int i = 0; i < numberOfNodes; i++)
+			adjacencyList[i] = new int[nodes[i].degree];
+
+		//Add the edges in the Adjacentcy Matrix to the list.
+		for(int i = 0; i < numberOfNodes; i++) {
+
+			int currentIndex = 0;
+			int j = 0;
+
+			while(j < numberOfNodes) {
+
+				if(adjacencyMatrix[i][j])
+					adjacencyList[i][currentIndex++] = j;
+
+				j++;
+			}
+		}
+
+	}
 }
