@@ -4,19 +4,23 @@
  * @author Max Potter
  * @author Wyatt Fegley
  */
-public class Node implements Comparable<Node> {
+public class Node implements Comparable<Node>
+{
     public int nodeNumber, degree;
 
-    public Node(int name) {
+    public Node(int name)
+    {
         this(name, 0);
     }    
 
-    public Node(int name, int tempDegree) {
+    public Node(int name, int tempDegree)
+    {
         degree = tempDegree;
         nodeNumber = name;
     }
 
-    public int compareTo(Node o) {
+    public int compareTo(Node o)
+    {
     	return this.degree - o.degree;
     }
 }
