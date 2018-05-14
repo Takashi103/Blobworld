@@ -4,8 +4,7 @@
  * @author Max Potter
  * @author Wyatt Fegley
  */
-public class Node implements Comparable<Node>
-{
+public class Node implements Comparable<Node> {
     public int nodeNumber, degree;
 
     public Node(int name) {
