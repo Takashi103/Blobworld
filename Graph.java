@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Graph Object
@@ -21,7 +22,7 @@ public class Graph  {
 		nodes = new Node[numberOfNodes];
 		//Create all the Nodes.
 		for(int i = 0; i < numberOfNodes; i++)
-			node[i] = new Node[i];
+			nodes[i] = new Node(i);
 
 		//Initialize the matrix.
 		adjacencyMatrix = new boolean[numberOfNodes][numberOfNodes];
@@ -32,10 +33,11 @@ public class Graph  {
 
 		Scanner input = new Scanner(System.in);
 
+		//Read in each edge.
 		while(input.hasNextInt()) {
 
-			int startNode = input.nextInt();
-			int endNode = input.nextInt();
+			int edgeStart = input.nextInt();
+			int edgeEnd = input.nextInt();
 
 			//If this edge does not exist already...
 			if(!adjacencyMatrix[edgeStart][edgeEnd] && !adjacencyMatrix[edgeEnd][edgeStart]) {
@@ -52,7 +54,7 @@ public class Graph  {
 		input.close();
 
 		//Initialize the List.
-		adjacencyList = new int[][numberOfNodes];
+		adjacencyList = new int[numberOfNodes][];
 		for(int i = 0; i < numberOfNodes; i++)
 			adjacencyList[i] = new int[nodes[i].degree];
 
@@ -70,6 +72,9 @@ public class Graph  {
 				j++;
 			}
 		}
+	}
 
+	public Node[] getNodes() {
+		return nodes;
 	}
 }
