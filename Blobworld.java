@@ -10,6 +10,8 @@ import java.util.*;
  */
 public class Blobworld {
 
+	private static int numberOfNodes;
+
 	private static Graph graph;
 
 	private static boolean[] available;
@@ -20,12 +22,12 @@ public class Blobworld {
 		
 		Scanner input = new Scanner(System.in);
 
-        //Store the number of blobs.
-		int n = input.nextInt();
-        
-        //Initialize the variables.
-		graph = new Graph(n);
-		available = new boolean[n];
+		//Store the number of blobs.
+		numberOfNodes = input.nextInt();
+		
+		//Initialize the variables.
+		graph = new Graph(numberOfNodes);
+		available = new boolean[numberOfNodes];
 
 		for(int i = 0; i < available.length; i++) {
 			available[i] = true;
@@ -37,28 +39,27 @@ public class Blobworld {
 	//Fills the blobsToSend list with the blobs that should be sent then sorts the list.
 	public static void findSolution() 
 	{
-		Node[] nodeArray = graph.getNodes();
-       	Collections.sort(nodeArray);
-        for(int i = 0; i < nodeArray.length; i++)
-        {
-            if(available[i])
-            {
-               	blobsToSend.add(nodeArray[i]);
-            	//available[i] does not need to be set to false because it will never be visited again.
-               	//Scan through the adjacency matrix and set all adjacent nodes to unavailable.
-               	for(int j = 0; j < graph.adjacencyMatrix[i].length; j++)
-               	{
-               		if(graph.adjacencyMatrix[i][j])
-               		{
+		sortAscending(graph.nodes);
+		for(int i = 0; i < numberOfNodes; i++)
+		{
+			if(available[i])
+			{
+				blobsToSend.add(graph.nodes[i]);
+				//available[i] does not need to be set to false because it will never be visited again.
+				//Scan through the adjacency matrix and set all adjacent nodes to unavailable.
+				for(int j = 0; j < graph.adjacencyMatrix[i].length; j++)
+				{
+					if(graph.adjacencyMatrix[i][j])
+					{
 						available[j] = false;
-						updateAdjacentDegrees(graph.Nodes[j]);
+						updateAdjacentDegrees(graph.nodes[j]);
 					}
-               	}
-               	updateAdjacentDegrees(nodeArray[i]);
-            }
-        }
-        
-       	Collections.sort(blobsToSend);
+				}
+				updateAdjacentDegrees(graph.nodes[i]);
+			}
+		}
+		
+		Collections.sort(blobsToSend);
 
 	}
 
@@ -73,8 +74,9 @@ public class Blobworld {
 			arr[j] = currentNode;
 		}
 	}
-	
-	/*public static void sortAscending(ArrayList<Node> arr) {
+
+	/*
+	public static void sortAscending(ArrayList<Node> arr) {
 		for(int i = 1; i < arr.size(); i++) {
 			Node currentNode = arr.get(i);
 			int j = i - 1;
@@ -85,40 +87,16 @@ public class Blobworld {
 			arr.get(j) = currentNode;
 		}
 	}*/
-    
-    public static void updateAdjacentDegrees(Node node)
+	
+	public static void updateAdjacentDegrees(Node node)
 	{
-		for(int i = 0; i < nodeArray.length; i++)
+		for(int i = 0; i < numberOfNodes; i++)
 		{
 			//If this node is adjacent to the now unavailable node, decrease its degree by one.
 			if(graph.adjacencyMatrix[node.nodeNumber][i])
 			{
-				graph.Nodes[i].degree--;
+				graph.nodes[i].degree--;
 			}
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
