@@ -12,15 +12,11 @@ public class Graph  {
 	public boolean[][] adjacencyMatrix;
 	public int[][] adjacencyList;
 
-	public int numberOfNodes;
-
 	public Node[] nodes;
 
 	public boolean useList = true;
 
 	public Graph(int numberOfNodes) {
-
-		this.numberOfNodes = numberOfNodes;
 
 		//Initialize the Node Array.
 		nodes = new Node[numberOfNodes];
@@ -79,21 +75,9 @@ public class Graph  {
 	}
 
 	public Node[] getNodes() {
-		return nodes;
-	}
-
-	public void printNodes() {
-
-		for(int i = 0; i < numberOfNodes; i++) {
-
-			System.out.print(i + " { ");
-			for(int j = 0; j < adjacencyList[i].length; j++) {
-				if(j != adjacencyList[i].length - 1)
-					System.out.print(adjacencyList[i][j] + ", ");
-				else
-					System.out.print(adjacencyList[i][j] + " }\n");
-			}
-		}
-
+        Node[] newNodes = new Node[nodes.length];
+        for(int i = 0; i < nodes.length; i++)
+            newNodes[i] = nodes[i];
+		return newNodes;
 	}
 }
