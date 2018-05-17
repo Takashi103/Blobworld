@@ -63,7 +63,25 @@ public class Blobworld {
 
 	}
 
-	public static void sortAscending(Node[] arr) {
+    public static void sortDegree(ArrayList<Node> list)
+    {
+        for(int i = 1; i < list.size(); i++)
+        {
+			for(int j = i - 1; j < list.size(); j++)
+            {
+				if(list.get(j).degree > list.get(i).degree)
+                {					
+                    Node temp = list.get(i);
+                    list.set(i, list.get(j));
+                    list.set(j, temp);
+                }
+            }
+        }
+    }	
+
+
+
+    public static void sortAscending(Node[] arr) {
 		for(int i = 1; i < arr.length; i++) {
 			Node currentNode = arr[i];
 			int j = i - 1;
