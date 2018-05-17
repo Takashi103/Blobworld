@@ -18,16 +18,11 @@ public class Blobworld {
 	
 	private static ArrayList<Node> blobsToSend;
 
-	public static void main(String[] args) {
-		
-		Scanner input = new Scanner(System.in);
-
-		//Store the number of blobs.
-		numberOfNodes = input.nextInt();
-		
+	public static void main(String[] args) 
+    {		
 		//Initialize the variables.
-		graph = new Graph(numberOfNodes);
-		available = new boolean[numberOfNodes];
+		graph = new Graph();
+		available = new boolean[graph.numberOfNodes];
 
 		for(int i = 0; i < available.length; i++) {
 			available[i] = true;
@@ -39,8 +34,8 @@ public class Blobworld {
 	//Fills the blobsToSend list with the blobs that should be sent then sorts the list.
 	public static void findSolution() 
 	{
-		sortAscending(graph.nodes);
-		for(int i = 0; i < numberOfNodes; i++)
+		sortDegree(graph.nodes);
+		for(int i = 0; i < graph.numberOfNodes; i++)
 		{
 			if(available[i])
 			{
@@ -60,16 +55,18 @@ public class Blobworld {
 		}
 		
 		Collections.sort(blobsToSend);
+        for(int i = 0; i < blobsToSend.size(); i++)
+            System.out.println(blobsToSend.get(i));
 
 	}
 
-    public static void sortDegree(ArrayList<Node> list)
+    public static void sortNodeNumber(ArrayList<Node> list)
     {
         for(int i = 1; i < list.size(); i++)
         {
 			for(int j = i - 1; j < list.size(); j++)
             {
-				if(list.get(j).degree > list.get(i).degree)
+				if(list.get(j).nodeNumber > list.get(i).degree)
                 {					
                     Node temp = list.get(i);
                     list.set(i, list.get(j));
@@ -79,8 +76,23 @@ public class Blobworld {
         }
     }	
 
-
-
+    public static void sortDegree(Node[] list)
+    {
+        for(int i = 1; i < list.length; i++)
+        {
+			for(int j = i - 1; j < list.length; j++)
+            {
+				if(list[j].degree > list[i].degree)
+                {					
+                    Node temp = list[i];
+                    list[i] = list[j];
+                    list[j] = list[temp];
+                }
+            }
+        }
+    }	
+    
+    /*
     public static void sortAscending(Node[] arr) {
 		for(int i = 1; i < arr.length; i++) {
 			Node currentNode = arr[i];
@@ -93,7 +105,7 @@ public class Blobworld {
 		}
 	}
 
-	/*
+	
 	public static void sortAscending(ArrayList<Node> arr) {
 		for(int i = 1; i < arr.size(); i++) {
 			Node currentNode = arr.get(i);
@@ -108,7 +120,7 @@ public class Blobworld {
 	
 	public static void updateAdjacentDegrees(Node node)
 	{
-		for(int i = 0; i < numberOfNodes; i++)
+		for(int i = 0; i < graph.numberOfNodes; i++)
 		{
 			//If this node is adjacent to the now unavailable node, decrease its degree by one.
 			if(graph.adjacencyMatrix[node.nodeNumber][i])
