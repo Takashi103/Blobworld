@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -12,11 +13,17 @@ public class Graph  {
 	public boolean[][] adjacencyMatrix;
 	public int[][] adjacencyList;
 
+	public int numberOfNodes;
+
 	public Node[] nodes;
 
 	public boolean useList = true;
 
-	public Graph(int numberOfNodes) {
+	public Graph() {
+
+		Scanner input = new Scanner(System.in);
+
+		numberOfNodes = input.nextInt();
 
 		//Initialize the Node Array.
 		nodes = new Node[numberOfNodes];
@@ -30,8 +37,6 @@ public class Graph  {
 		for(int i = 0; i < numberOfNodes; i++)
 			for(int j = 0; j < numberOfNodes; j++)
 				adjacencyMatrix[i][j] = false;
-
-		Scanner input = new Scanner(System.in);
 
 		//Read in each edge.
 		while(input.hasNextInt()) {
@@ -75,9 +80,21 @@ public class Graph  {
 	}
 
 	public Node[] getNodes() {
-        Node[] newNodes = new Node[nodes.length];
-        for(int i = 0; i < nodes.length; i++)
-            newNodes[i] = nodes[i];
-		return newNodes;
+		return nodes;
+	}
+
+	public void printNodes() {
+
+		for(int i = 0; i < numberOfNodes; i++) {
+
+			System.out.print(i + " : { ");
+			for(int j = 0; j < adjacencyList[i].length; j++) {
+				if(j != adjacencyList[i].length - 1)
+					System.out.print(adjacencyList[i][j] + ", ");
+				else
+					System.out.print(adjacencyList[i][j] + " }\n");
+			}
+		}
+
 	}
 }
