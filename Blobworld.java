@@ -86,7 +86,7 @@ public class Blobworld {
                 {					
                     Node temp = list[i];
                     list[i] = list[j];
-                    list[j] = list[temp];
+                    list[j] = temp;
                 }
             }
         }
