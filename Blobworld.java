@@ -22,12 +22,14 @@ public class Blobworld {
     {		
 		//Initialize the variables.
 		graph = new Graph();
-		available = new boolean[graph.numberOfNodes];
 
+		available = new boolean[graph.numberOfNodes];
 		for(int i = 0; i < available.length; i++) {
 			available[i] = true;
 		}
 
+        blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
+        
 		findSolution();
 	}
 	
@@ -39,9 +41,10 @@ public class Blobworld {
 		sortDegree(nodeArr);
 		for(int i = 0; i < graph.numberOfNodes; i++)
 		{
+   
 			if(available[i])
 			{
-				blobsToSend.add(graph.nodes[i]);
+				blobsToSend.add(nodeArr[i]);
 				//available[i] does not need to be set to false because it will never be visited again.
 				//Scan through the adjacency matrix and set all adjacent nodes to unavailable.
 				for(int j = 0; j < graph.adjacencyMatrix[i].length; j++)
@@ -58,7 +61,7 @@ public class Blobworld {
 		
 		Collections.sort(blobsToSend);
         for(int i = 0; i < blobsToSend.size(); i++)
-            System.out.println(blobsToSend.get(i));
+            System.out.println(blobsToSend.get(i).nodeNumber);
 
 	}
 
@@ -94,32 +97,6 @@ public class Blobworld {
         }
     }	
     
-    /*
-    public static void sortAscending(Node[] arr) {
-		for(int i = 1; i < arr.length; i++) {
-			Node currentNode = arr[i];
-			int j = i - 1;
-			for(; j >= 0; j--) {
-				if(arr[j].degree > currentNode.degree)
-					arr[j+1] = arr[j];
-			}
-			arr[j] = currentNode;
-		}
-	}
-
-	
-	public static void sortAscending(ArrayList<Node> arr) {
-		for(int i = 1; i < arr.size(); i++) {
-			Node currentNode = arr.get(i);
-			int j = i - 1;
-			for(; j >= 0; j--) {
-				if(arr.get(j).degree > currentNode.degree)
-					arr.get(j+1) = arr.get(j);
-			}
-			arr.get(j) = currentNode;
-		}
-	}*/
-	
 	public static void updateAdjacentDegrees(Node[] nodeArr, Node node)
 	{
 		for(int i = 0; i < graph.numberOfNodes; i++)
@@ -132,3 +109,4 @@ public class Blobworld {
 		}
 	}
 }
+
