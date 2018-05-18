@@ -38,28 +38,35 @@ public class Blobworld {
 	{
 		Node[] nodeArr = new Node[graph.nodes.length];
 		System.arraycopy(graph.nodes, 0, nodeArr, 0, graph.nodes.length);
-		sortDegree(nodeArr);
-		for(int i = 0; i < graph.numberOfNodes; i++)
-		{
-   
-			if(available[i])
-			{
-				blobsToSend.add(nodeArr[i]);
-				//available[i] does not need to be set to false because it will never be visited again.
-				//Scan through the adjacency matrix and set all adjacent nodes to unavailable.
-				for(int j = 0; j < graph.adjacencyMatrix[i].length; j++)
-				{
-					if(graph.adjacencyMatrix[i][j])
-					{
-						available[j] = false;
-						updateAdjacentDegrees(nodeArr, graph.nodes[j]);
-					}
-				}
-				updateAdjacentDegrees(nodeArr, graph.nodes[i]);
-			}
-		}
 		
-		Collections.sort(blobsToSend);
+		int unavailableNodes = 0;
+        while(unavailableNodes < graph.numberOfNodes)
+        {
+        	sortDegree(nodeArr);
+        	for(int i = 0;; i++)
+        	{
+        		if(available[nodeArr[i].nodeNumber])
+        		{
+            		blobsToSend.add(nodeArr[i]);
+            		available[nodeArr[i].nodeNumber] = false;
+					//available[i] does not need to be set to false because it will never be visited again.
+					//Scan through the adjacency matrix and set all adjacent nodes to unavailable.
+					for(int j = 0; j < graph.adjacencyMatrix[i].length; j++)
+					{
+			    		if(graph.adjacencyMatrix[i][j])
+						{
+							available[i] = false;
+							unavailableNodes++;
+							updateAdjacentDegrees(nodeArr, graph.nodes[j]);
+						}
+					}
+					updateAdjacentDegrees(nodeArr, graph.nodes[nodeArr[i].nodeNumber]);
+					break;
+				}
+			}
+        }
+		
+		sortNodeNumber(blobsToSend);
         for(int i = 0; i < blobsToSend.size(); i++)
             System.out.println(blobsToSend.get(i).nodeNumber);
 
@@ -104,7 +111,9 @@ public class Blobworld {
 			//If this node is adjacent to the now unavailable node, decrease its degree by one.
 			if(graph.adjacencyMatrix[node.nodeNumber][i])
 			{
-				nodeArr[i].degree--;
+				graph.nodes[i].degree--;
+				if(graph.nodes[i].degree < 0)
+					graph.nodes[i].degree = 0;
 			}
 		}
 	}
