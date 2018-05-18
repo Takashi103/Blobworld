@@ -3,7 +3,7 @@ import java.util.*;
 // TODO : change Nodes from node[] to PriorityQueue
 
 /**
- * This class handles the problem solving of the Blobworld problem.
+ * This class will find the solution of the Blobworld problem.
  * @author Seth Corbin
  * @author Max Potter
  * @author Wyatt Fegley
@@ -34,7 +34,9 @@ public class Blobworld {
 	//Fills the blobsToSend list with the blobs that should be sent then sorts the list.
 	public static void findSolution() 
 	{
-		sortDegree(graph.nodes);
+		Node[] nodeArr = new Node[graph.nodes.length];
+		System.arraycopy(graph.nodes, 0, nodeArr, 0, graph.nodes.length);
+		sortDegree(nodeArr);
 		for(int i = 0; i < graph.numberOfNodes; i++)
 		{
 			if(available[i])
@@ -47,10 +49,10 @@ public class Blobworld {
 					if(graph.adjacencyMatrix[i][j])
 					{
 						available[j] = false;
-						updateAdjacentDegrees(graph.nodes[j]);
+						updateAdjacentDegrees(nodeArr, graph.nodes[j]);
 					}
 				}
-				updateAdjacentDegrees(graph.nodes[i]);
+				updateAdjacentDegrees(nodeArr, graph.nodes[i]);
 			}
 		}
 		
@@ -66,7 +68,7 @@ public class Blobworld {
         {
 			for(int j = i - 1; j < list.size(); j++)
             {
-				if(list.get(j).nodeNumber > list.get(i).degree)
+				if(list.get(j).nodeNumber > list.get(i).nodeNumber)
                 {					
                     Node temp = list.get(i);
                     list.set(i, list.get(j));
@@ -118,14 +120,14 @@ public class Blobworld {
 		}
 	}*/
 	
-	public static void updateAdjacentDegrees(Node node)
+	public static void updateAdjacentDegrees(Node[] nodeArr, Node node)
 	{
 		for(int i = 0; i < graph.numberOfNodes; i++)
 		{
 			//If this node is adjacent to the now unavailable node, decrease its degree by one.
 			if(graph.adjacencyMatrix[node.nodeNumber][i])
 			{
-				graph.nodes[i].degree--;
+				nodeArr[i].degree--;
 			}
 		}
 	}
