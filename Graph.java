@@ -97,4 +97,19 @@ public class Graph  {
 		}
 
 	}
+
+	public void printMatrix() {
+		for(int i = 0; i < adjacencyMatrix.length; i++) {
+			System.out.print("{ ");
+			for(int j = 0; j < adjacencyMatrix[i].length) {
+				if(i == j)
+					System.out.print("-----  ");
+				else if(adjacencyMatrix[i][j])
+					System.out.print("True  ");
+				else
+					System.out.print("False ");
+			}
+			System.out.print("}\n");
+		}
+	}
 }
