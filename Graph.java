@@ -101,7 +101,7 @@ public class Graph  {
 	public void printMatrix() {
 		for(int i = 0; i < adjacencyMatrix.length; i++) {
 			System.out.print("{ ");
-			for(int j = 0; j < adjacencyMatrix[i].length) {
+			for(int j = 0; j < adjacencyMatrix[i].length; j++) {
 				if(i == j)
 					System.out.print("-----  ");
 				else if(adjacencyMatrix[i][j])
