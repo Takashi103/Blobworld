@@ -43,24 +43,24 @@ public class Blobworld {
         while(unavailableNodes < graph.numberOfNodes)
         {
         	sortDegree(nodeArr);
-        	for(int i = 0;; i++)
+        	for(int i = 0; i < graph.numberOfNodes; i++)
         	{
         		if(available[nodeArr[i].nodeNumber])
         		{
             		blobsToSend.add(nodeArr[i]);
             		available[nodeArr[i].nodeNumber] = false;
+                    unavailableNodes++;
 					//available[i] does not need to be set to false because it will never be visited again.
 					//Scan through the adjacency matrix and set all adjacent nodes to unavailable.
-					for(int j = 0; j < graph.adjacencyMatrix[i].length; j++)
+					for(int j = 0; j < graph.adjacencyMatrix[nodeArr[i].nodeNumber].length; j++)
 					{
-			    		if(graph.adjacencyMatrix[i][j])
+			    		if(graph.adjacencyMatrix[nodeArr[i].nodeNumber][j])
 						{
-							available[i] = false;
+							available[j] = false;
 							unavailableNodes++;
 							updateAdjacentDegrees(nodeArr, graph.nodes[j]);
 						}
 					}
-					updateAdjacentDegrees(nodeArr, graph.nodes[nodeArr[i].nodeNumber]);
 					break;
 				}
 			}
@@ -77,9 +77,9 @@ public class Blobworld {
     {
         for(int i = 1; i < list.size(); i++)
         {
-			for(int j = i - 1; j < list.size() - 1; j++)
+			for(int j = i - 1; j < list.size(); j++)
             {
-				if(list.get(i).nodeNumber > list.get(j).nodeNumber)
+				if(list.get(i).nodeNumber < list.get(j).nodeNumber)
                 {					
                     Node temp = list.get(i);
                     list.set(i, list.get(j));
@@ -93,9 +93,9 @@ public class Blobworld {
     {
         for(int i = 1; i < list.length; i++)
         {
-			for(int j = i - 1; j < list.length - 1; j++)
+			for(int j = i - 1; j < list.length; j++)
             {
-				if(list[i].degree > list[j].degree)
+				if(list[i].degree < list[j].degree)
                 {					
                     Node temp = list[i];
                     list[i] = list[j];
