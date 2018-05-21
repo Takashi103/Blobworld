@@ -76,9 +76,9 @@ public class Blobworld {
     {
         for(int i = 1; i < list.size(); i++)
         {
-			for(int j = i - 1; j < list.size(); j++)
+			for(int j = i - 1; j < list.size() - 1; j++)
             {
-				if(list.get(j).nodeNumber > list.get(i).nodeNumber)
+				if(list.get(i).nodeNumber > list.get(j).nodeNumber)
                 {					
                     Node temp = list.get(i);
                     list.set(i, list.get(j));
@@ -92,9 +92,9 @@ public class Blobworld {
     {
         for(int i = 1; i < list.length; i++)
         {
-			for(int j = i - 1; j < list.length; j++)
+			for(int j = i - 1; j < list.length - 1; j++)
             {
-				if(list[j].degree > list[i].degree)
+				if(list[i].degree > list[j].degree)
                 {					
                     Node temp = list[i];
                     list[i] = list[j];
@@ -118,4 +118,3 @@ public class Blobworld {
 		}
 	}
 }
-
