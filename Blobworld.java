@@ -18,6 +18,8 @@ public class Blobworld {
 	
 	private static ArrayList<Node> blobsToSend;
 
+    private static ArrayList<Node> bestSolution;
+
 	public static void main(String[] args) 
     {		
 		//Initialize the variables.
@@ -28,9 +30,20 @@ public class Blobworld {
 			available[i] = true;
 		}
 
-        blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
-        
-		findSolution();
+        bestSolution = new ArrayList<Node>(0);        
+
+        long timeSinceStart = System.nanoTime();
+
+        while(System.nanoTime() - timeSinceStart < 60000000000l)		
+        {            
+            blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
+            findSolution();
+        }
+
+        System.out.println("Blobs to send size: " + blobsToSend.size());
+		sortNodeNumber(blobsToSend);
+        for(int i = 0; i < blobsToSend.size(); i++)
+            System.out.println(blobsToSend.get(i).nodeNumber);
 	}
 	
 	//Fills the blobsToSend list with the blobs that should be sent then sorts the list.
@@ -42,8 +55,8 @@ public class Blobworld {
 		int unavailableNodes = 0;
         while(unavailableNodes < graph.numberOfNodes)
         {
-        	sortDegree(nodeArr);
-        	for(int i = 0; i < graph.numberOfNodes; i++)
+        	//sortDegree(nodeArr);
+        	for(int i = (int)Math.random() * graph.numberOfNodes; i < graph.numberOfNodes; i++)
         	{
         		if(available[nodeArr[i].nodeNumber])
         		{
@@ -65,12 +78,10 @@ public class Blobworld {
 				}
 			}
         }
-		
-        System.out.println("Blobs to send size: " + blobsToSend.size());
-		sortNodeNumber(blobsToSend);
-        for(int i = 0; i < blobsToSend.size(); i++)
-            System.out.println(blobsToSend.get(i).nodeNumber);
-
+        if(blobsToSend.size() > bestSolution.size())
+        {
+            bestSolution = blobsToSend;
+        }
 	}
 
     public static void sortNodeNumber(ArrayList<Node> list)
