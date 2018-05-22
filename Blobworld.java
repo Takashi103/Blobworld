@@ -25,17 +25,19 @@ public class Blobworld {
 		//Initialize the variables.
 		graph = new Graph();
 
-		available = new boolean[graph.numberOfNodes];
-		for(int i = 0; i < available.length; i++) {
-			available[i] = true;
-		}
-
         bestSolution = new ArrayList<Node>(0);        
 
-        long timeSinceStart = System.nanoTime();
+        long startTime = System.nanoTime();
 
-        while(System.nanoTime() - timeSinceStart < 60000000000l)		
+        System.out.println(startTime);
+        
+        while(System.nanoTime() - startTime < 10000000000l)		
         {            
+            System.out.println(System.nanoTime() - startTime);
+            available = new boolean[graph.numberOfNodes];
+            for(int i = 0; i < available.length; i++)
+                available[i] = true;
+
             blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
             findSolution();
         }
