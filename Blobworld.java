@@ -13,27 +13,37 @@ public class Blobworld {
 	private static int numberOfNodes;
 
 	private static Graph graph;
+	
+	private static Graph freshGraph;
 
 	private static boolean[] available;
 	
 	private static ArrayList<Node> blobsToSend;
 
     private static ArrayList<Node> bestSolution;
+    
+    private static Random rand = new Random();
+    
+    private static int avgDegree;
 
 	public static void main(String[] args) 
     {		
 		//Initialize the variables.
-		graph = new Graph();
+		freshGraph = new Graph();
 
-        bestSolution = new ArrayList<Node>(0);        
-
-        long startTime = System.nanoTime();
-
-        System.out.println(startTime);
+        bestSolution = new ArrayList<Node>(0);
         
-        while(System.nanoTime() - startTime < 10000000000l)		
+        int sum = 0;
+        for(int i = 0; i < freshGraph.numberOfNodes; i++)
+            sum += freshGraph.nodes[i].degree;
+        avgDegree = sum / freshGraph.nodes.length;
+        
+        long startTime = System.nanoTime();
+        
+        while(System.nanoTime() - startTime < 10000000000l)
         {            
-            System.out.println(System.nanoTime() - startTime);
+            System.out.println(bestSolution.size());
+            graph = freshGraph;
             available = new boolean[graph.numberOfNodes];
             for(int i = 0; i < available.length; i++)
                 available[i] = true;
@@ -42,10 +52,10 @@ public class Blobworld {
             findSolution();
         }
 
-        System.out.println("Blobs to send size: " + blobsToSend.size());
-		sortNodeNumber(blobsToSend);
-        for(int i = 0; i < blobsToSend.size(); i++)
-            System.out.println(blobsToSend.get(i).nodeNumber);
+        System.out.println("Blobs to send size: " + bestSolution.size());
+		sortNodeNumber(bestSolution);
+        for(int i = 0; i < bestSolution.size(); i++)
+            System.out.println(bestSolution.get(i).nodeNumber);
 	}
 	
 	//Fills the blobsToSend list with the blobs that should be sent then sorts the list.
@@ -53,14 +63,17 @@ public class Blobworld {
 	{
 		Node[] nodeArr = new Node[graph.nodes.length];
 		System.arraycopy(graph.nodes, 0, nodeArr, 0, graph.nodes.length);
+		shuffle(nodeArr);
 		
 		int unavailableNodes = 0;
         while(unavailableNodes < graph.numberOfNodes)
         {
         	//sortDegree(nodeArr);
-        	for(int i = (int)Math.random() * graph.numberOfNodes; i < graph.numberOfNodes; i++)
+        	for(int i = 0; i < graph.numberOfNodes; i++)
         	{
-        		if(available[nodeArr[i].nodeNumber])
+                if(nodeArr[i].degree > avgDegree)
+				{unavailableNodes++;}
+        		else if(available[nodeArr[i].nodeNumber])
         		{
             		blobsToSend.add(nodeArr[i]);
             		available[nodeArr[i].nodeNumber] = false;
@@ -78,6 +91,7 @@ public class Blobworld {
 					}
 					break;
 				}
+				
 			}
         }
         if(blobsToSend.size() > bestSolution.size())
@@ -131,4 +145,13 @@ public class Blobworld {
 			}
 		}
 	}
+	
+	public static void shuffle(Node[] array) { // mix-up the array
+        for (int i = array.length - 1; i > 0; --i) {
+            int j = rand.nextInt(i + 1);
+            Node temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
 }
