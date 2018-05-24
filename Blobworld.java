@@ -19,7 +19,7 @@ public class Blobworld {
 	private static ArrayList<Node> blobsToSend;
 
 	public static void main(String[] args) 
-	{		
+    {		
 		//Initialize the variables.
 		graph = new Graph();
 
@@ -28,8 +28,8 @@ public class Blobworld {
 			available[i] = true;
 		}
 
-		blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
-		
+        blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
+        
 		findSolution();
 	}
 	
@@ -40,21 +40,21 @@ public class Blobworld {
 		System.arraycopy(graph.nodes, 0, nodeArr, 0, graph.nodes.length);
 		
 		int unavailableNodes = 0;
-		while(unavailableNodes < graph.numberOfNodes)
-		{
-			sortDegree(nodeArr);
-			for(int i = 0; i < graph.numberOfNodes; i++)
-			{
-				if(available[nodeArr[i].nodeNumber])
-				{
-					blobsToSend.add(nodeArr[i]);
-					available[nodeArr[i].nodeNumber] = false;
-					unavailableNodes++;
+        while(unavailableNodes < graph.numberOfNodes)
+        {
+        	sortDegree(nodeArr);
+        	for(int i = 0; i < graph.numberOfNodes; i++)
+        	{
+        		if(available[nodeArr[i].nodeNumber])
+        		{
+            		blobsToSend.add(nodeArr[i]);
+            		available[nodeArr[i].nodeNumber] = false;
+                    unavailableNodes++;
 					//available[i] does not need to be set to false because it will never be visited again.
 					//Scan through the adjacency matrix and set all adjacent nodes to unavailable.
 					for(int j = 0; j < graph.adjacencyMatrix[nodeArr[i].nodeNumber].length; j++)
 					{
-						if(graph.adjacencyMatrix[nodeArr[i].nodeNumber][j])
+			    		if(graph.adjacencyMatrix[nodeArr[i].nodeNumber][j])
 						{
 							available[j] = false;
 							unavailableNodes++;
@@ -64,47 +64,47 @@ public class Blobworld {
 					break;
 				}
 			}
-		}
+        }
 		
-		System.out.println("Blobs to send size: " + blobsToSend.size());
+        System.out.println("Blobs to send size: " + blobsToSend.size());
 		sortNodeNumber(blobsToSend);
-		for(int i = 0; i < blobsToSend.size(); i++)
-			System.out.println(blobsToSend.get(i).nodeNumber);
+        for(int i = 0; i < blobsToSend.size(); i++)
+            System.out.println(blobsToSend.get(i).nodeNumber);
 
 	}
 
-	public static void sortNodeNumber(ArrayList<Node> list)
-	{
-		for(int i = 1; i < list.size(); i++)
-		{
+    public static void sortNodeNumber(ArrayList<Node> list)
+    {
+        for(int i = 1; i < list.size(); i++)
+        {
 			for(int j = i - 1; j < list.size(); j++)
-			{
+            {
 				if(list.get(i).nodeNumber < list.get(j).nodeNumber)
-				{					
-					Node temp = list.get(i);
-					list.set(i, list.get(j));
-					list.set(j, temp);
-				}
-			}
-		}
-	}	
+                {					
+                    Node temp = list.get(i);
+                    list.set(i, list.get(j));
+                    list.set(j, temp);
+                }
+            }
+        }
+    }	
 
-	public static void sortDegree(Node[] list)
-	{
-		for(int i = 1; i < list.length; i++)
-		{
+    public static void sortDegree(Node[] list)
+    {
+        for(int i = 1; i < list.length; i++)
+        {
 			for(int j = i - 1; j < list.length; j++)
-			{
+            {
 				if(list[i].degree < list[j].degree)
-				{					
-					Node temp = list[i];
-					list[i] = list[j];
-					list[j] = temp;
-				}
-			}
-		}
-	}	
-	
+                {					
+                    Node temp = list[i];
+                    list[i] = list[j];
+                    list[j] = temp;
+                }
+            }
+        }
+    }	
+    
 	public static void updateAdjacentDegrees(Node[] nodeArr, Node node)
 	{
 		for(int i = 0; i < graph.numberOfNodes; i++)
