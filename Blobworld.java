@@ -13,86 +13,57 @@ public class Blobworld {
 	private static int numberOfNodes;
 
 	private static Graph graph;
-	
-	private static Graph freshGraph;
 
 	private static boolean[] available;
 	
 	private static ArrayList<Node> blobsToSend;
 
-    private static ArrayList<Node> bestSolution;
-    
-    private static Random rand = new Random();
-    
-    private static int avgDegree;
-
 	public static void main(String[] args) 
-    {		
+	{		
 		//Initialize the variables.
-		freshGraph = new Graph();
+		graph = new Graph();
 
-        bestSolution = new ArrayList<Node>(0);
-        
-        int sum = 0;
-        for(int i = 0; i < freshGraph.numberOfNodes; i++)
-            sum += freshGraph.nodes[i].degree;
-        avgDegree = sum / freshGraph.nodes.length;
-        
-        long startTime = System.nanoTime();
-        
-        while(System.nanoTime() - startTime < 10000000000l)
-        {            
-            System.out.println(bestSolution.size());
-            graph = freshGraph;
-            available = new boolean[graph.numberOfNodes];
-            for(int i = 0; i < available.length; i++)
-                available[i] = true;
+		available = new boolean[graph.numberOfNodes];
+		for(int i = 0; i < available.length; i++) {
+			available[i] = true;
+		}
 
-            blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
-            findSolution();
-        }
-
-        System.out.println("Blobs to send size: " + bestSolution.size());
-		sortNodeNumber(bestSolution);
-        for(int i = 0; i < bestSolution.size(); i++)
-            System.out.println(bestSolution.get(i).nodeNumber);
+		blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
+		
+		findSolution();
 	}
 	
 	//Fills the blobsToSend list with the blobs that should be sent then sorts the list.
 	public static void findSolution() 
 	{
+        //Make a copy of the array with all the nodes.
 		Node[] nodeArr = new Node[graph.nodes.length];
 		System.arraycopy(graph.nodes, 0, nodeArr, 0, graph.nodes.length);
-		shuffle(nodeArr);
 		
+		//Choose the nodes to include in the solution.
 		int unavailableNodes = 0;
         while(unavailableNodes < graph.numberOfNodes)
         {
-        	//sortDegree(nodeArr);
-        	for(int i = 0; i < graph.numberOfNodes; i++)
-        	{
-                if(nodeArr[i].degree > avgDegree)
-				{unavailableNodes++;}
-        		else if(available[nodeArr[i].nodeNumber])
-        		{
-            		blobsToSend.add(nodeArr[i]);
-            		available[nodeArr[i].nodeNumber] = false;
-                    unavailableNodes++;
-					//available[i] does not need to be set to false because it will never be visited again.
-					//Scan through the adjacency matrix and set all adjacent nodes to unavailable.
-					for(int j = 0; j < graph.adjacencyMatrix[nodeArr[i].nodeNumber].length; j++)
-					{
-			    		if(graph.adjacencyMatrix[nodeArr[i].nodeNumber][j])
-						{
-							available[j] = false;
-							unavailableNodes++;
-							updateAdjacentDegrees(nodeArr, graph.nodes[j]);
-						}
-					}
-					break;
-				}
-				
-			}
+
+            Node selectedNode = chooseByWeight(nodeArr); //A -1 might need to  be added to the endIndex.
+            blobsToSend.add(selectedNode);
+            
+            //Make the node we're taking and its adjacencies unavailable.
+            available[selectedNode.nodeNumber] = false;
+            nodeArr[selectedNode.nodeNumber = null;
+            for(int i = 0; i < graph.adjacencyMatrix; i++)
+            {
+            	if(graph.adjacencyMatrix[selectedNode.nodeNumber][j])
+            	{
+            		nodeArr[i] = null;
+            		unavailable++;
+            	}
+            }
+        }
+        //Add the weights to the nodes used in the solution.
+        for(Node node : blobsToSend)
+        {
+        	node.weight++;
         }
         if(blobsToSend.size() > bestSolution.size())
         {
@@ -100,38 +71,69 @@ public class Blobworld {
         }
 	}
 
-    public static void sortNodeNumber(ArrayList<Node> list)
-    {
-        for(int i = 1; i < list.size(); i++)
-        {
-			for(int j = i - 1; j < list.size(); j++)
-            {
-				if(list.get(i).nodeNumber < list.get(j).nodeNumber)
-                {					
-                    Node temp = list.get(i);
-                    list.set(i, list.get(j));
-                    list.set(j, temp);
-                }
-            }
-        }
-    }	
+	public static Node chooseByWeight(ArrayList<Node> nodes, int endIndex) {
+		if(endIndex < 0)
+			throw new Exception();
+		if(endIndex == 0)
+			return nodes.get(0);
+		Node[] n = new Node[endIndex];
+		for(int i = 0; i < endIndex; i++) {
+			n[i] = nodes.get(i);
+		}
+		return chooseByWeight(n;
+	}
 
-    public static void sortDegree(Node[] list)
-    {
-        for(int i = 1; i < list.length; i++)
+	public static Node chooseByWeight(Node[] nodes) {
+		for(Node n: nodes) 
         {
-			for(int j = i - 1; j < list.length; j++)
+			if(n != null)
+				total += n.weight;
+		}
+		double rand = Math.random() * total;
+		double count = 0.0;
+		for(int i = 0; i < nodes.length; i++) {
+			if(nodes[i] != null) 
             {
+				if(count < rand && rand <= (count + nodes[i].weight))
+					return nodes[i];
+				count += nodes[i].weight;
+			}
+		}
+		return null;
+	}
+
+	public static void sortNodeNumber(ArrayList<Node> list)
+	{
+		for(int i = 1; i < list.size(); i++)
+		{
+			for(int j = i - 1; j < list.size(); j++)
+			{
+				if(list.get(i).nodeNumber < list.get(j).nodeNumber)
+				{					
+					Node temp = list.get(i);
+					list.set(i, list.get(j));
+					list.set(j, temp);
+				}
+			}
+		}
+	}	
+
+	public static void sortDegree(Node[] list)
+	{
+		for(int i = 1; i < list.length; i++)
+		{
+			for(int j = i - 1; j < list.length; j++)
+			{
 				if(list[i].degree < list[j].degree)
-                {					
-                    Node temp = list[i];
-                    list[i] = list[j];
-                    list[j] = temp;
-                }
-            }
-        }
-    }	
-    
+				{					
+					Node temp = list[i];
+					list[i] = list[j];
+					list[j] = temp;
+				}
+			}
+		}
+	}	
+	
 	public static void updateAdjacentDegrees(Node[] nodeArr, Node node)
 	{
 		for(int i = 0; i < graph.numberOfNodes; i++)
@@ -145,13 +147,5 @@ public class Blobworld {
 			}
 		}
 	}
-	
-	public static void shuffle(Node[] array) { // mix-up the array
-        for (int i = array.length - 1; i > 0; --i) {
-            int j = rand.nextInt(i + 1);
-            Node temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
-        }
-    }
 }
+
