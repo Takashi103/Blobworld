@@ -73,6 +73,29 @@ public class Blobworld {
 
 	}
 
+		public static Node chooseByWeight(ArrayList<Node> nodes, int endIndex) {
+		return chooseByWeight((Node)nodes.toArray(), endIndex);
+	}
+
+	public static Node chooseByWeight(Node[] nodes, int endIndex) {
+		if(endIndex < 0)
+			throw new Exception();
+		if(endIndex == 0)
+			return nodes[0];
+		double total = 0.0;
+		for(Node n: nodes) {
+			total += n.weight;
+		}
+		double rand = Math.random() * total;
+		double count = 0.0;
+		for(int i = 0; i < endIndex; i++) {
+			if(count < rand && rand <= (count + nodes[i].weight))
+				return nodes[i];
+			count += nodes[i].weight;
+		}
+		return null;
+	}
+	
     public static void sortNodeNumber(ArrayList<Node> list)
     {
         for(int i = 1; i < list.size(); i++)
