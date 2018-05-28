@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 // TODO : change Nodes from node[] to PriorityQueue
@@ -20,7 +21,7 @@ public class Blobworld {
 
     private static ArrayList<Node> bestSolution;
 
-    public static void main(String[] args) 
+    public static void main(String[] args) throws FileNotFoundException 
     {		
 		//Initialize the variables.
     	graph = new Graph();
@@ -29,7 +30,6 @@ public class Blobworld {
         System.out.println("bestSolution declared");
         
         //Run findSolution as many times as you can in the given time, storing the best solution so far.
-        long startTime = System.nanoTime();
         for(int run = 1; run <= 20; run++)
         {
         	//DEBUG: Print the number of nodes in the current bestSolution
@@ -57,15 +57,23 @@ public class Blobworld {
 		Node[] nodeArr = new Node[graph.nodes.length];
 		System.arraycopy(graph.nodes, 0, nodeArr, 0, graph.nodes.length);
 		
+		System.out.println(nodeArr.length);
+		
 		//Choose the nodes to include in the solution.
 		int unavailableNodes = 0;
         while(unavailableNodes < graph.numberOfNodes)
         {
+        	System.out.println("nodeArr before choosing node.");
+        	for(Node n : nodeArr)
+    			System.out.print(n + " ");
+        	
             Node selectedNode = chooseByWeight(nodeArr);
             blobsToSend.add(selectedNode);
             
             //Make the node we're taking and its adjacencies unavailable.
+            System.out.println(selectedNode);
             available[selectedNode.nodeNumber] = false;
+            unavailableNodes++;
             nodeArr[selectedNode.nodeNumber] = null;
             for(int i = 0; i < graph.adjacencyMatrix.length; i++)
             {
@@ -111,11 +119,14 @@ public class Blobworld {
 		for(int i = 0; i < nodes.length; i++) {
 			if(nodes[i] != null) 
             {
-				if(count < rand && rand <= (count + nodes[i].weight))
+				if(count <= rand && rand <= (count + nodes[i].weight))
 					return nodes[i];
 				count += nodes[i].weight;
 			}
 		}
+		System.out.println("Choose by weight returning null.");
+		for(Node n : nodes)
+			System.out.print(n + " ");
 		return null;
 	}
 

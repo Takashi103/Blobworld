@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -17,10 +18,10 @@ public class Graph  {
 
 	public boolean useList = true;
 
-	public Graph() {
+	public Graph() throws FileNotFoundException {
 
 		Scanner input = new Scanner(System.in);
-
+		
 		numberOfNodes = input.nextInt();
 
 		//Initialize the Node Array.
@@ -64,7 +65,7 @@ public class Graph  {
 		for(int i = 0; i < numberOfNodes; i++)
 			adjacencyList[i] = new int[nodes[i].degree];
 
-		//Add the edges in the Adjacentcy Matrix to the list.
+		//Add the edges in the adjacency Matrix to the list.
 		for(int i = 0; i < numberOfNodes; i++) {
 
 			int currentIndex = 0;
