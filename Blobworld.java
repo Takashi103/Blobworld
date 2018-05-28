@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 
-// TODO : change Nodes from node[] to PriorityQueue
-
 /**
  * This class will find the solution of the Blobworld problem.
  * @author Seth Corbin
@@ -86,11 +84,11 @@ public class Blobworld
             available[selectedNode.nodeNumber] = false;
             unavailableNodes++;
             nodeArr[selectedNode.nodeNumber] = null;
-            for(int i = 0; i < graph.adjacencyMatrix.length; i++)
+            for(Node node : graph.adjacencyList[selectedNode.nodeNumber])
             {
-            	if(graph.adjacencyMatrix[selectedNode.nodeNumber][i])
+            	if(available [node.nodeNumber])
             	{
-            		nodeArr[i] = null;
+            		nodeArr[node.nodeNumber] = null;
             		unavailableNodes++;
             	}
             }

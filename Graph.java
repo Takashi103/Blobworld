@@ -9,7 +9,7 @@ import java.util.*;
 public class Graph  {
 
 	public boolean[][] adjacencyMatrix;
-	public int[][] adjacencyList;
+	public Node[][] adjacencyList;
 
 	public int numberOfNodes;
 
@@ -55,9 +55,9 @@ public class Graph  {
 		input.close();
 
 		//Initialize the List.
-		adjacencyList = new int[numberOfNodes][];
+		adjacencyList = new Node[numberOfNodes][];
 		for(int i = 0; i < numberOfNodes; i++)
-			adjacencyList[i] = new int[nodes[i].degree];
+			adjacencyList[i] = new Node[nodes[i].degree];
 
 		//Add the edges in the adjacency Matrix to the list.
 		for(int i = 0; i < numberOfNodes; i++) {
@@ -68,7 +68,7 @@ public class Graph  {
 			while(j < numberOfNodes) {
 
 				if(adjacencyMatrix[i][j])
-					adjacencyList[i][currentIndex++] = j;
+					adjacencyList[i][currentIndex++] = nodes[j];
 
 				j++;
 			}
