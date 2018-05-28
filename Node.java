@@ -7,6 +7,7 @@
 public class Node implements Comparable<Node>
 {
     public int nodeNumber, degree;
+    public int weight = 0;
 
     public Node(int name)
     {

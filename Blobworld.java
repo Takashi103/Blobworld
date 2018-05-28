@@ -1,4 +1,4 @@
-import java.util.*;
+import java.util.ArrayList;
 
 // TODO : change Nodes from node[] to PriorityQueue
 
@@ -8,9 +8,9 @@ import java.util.*;
  * @author Max Potter
  * @author Wyatt Fegley
  */
+//In the current iteration, each blob will be given a weight equal to the largest solution it has been in.
+//findSolution will choose nodes to add to the graph randomly, prioritizing nodes with higher weights.
 public class Blobworld {
-
-	private static int numberOfNodes;
 
 	private static Graph graph;
 
@@ -18,19 +18,36 @@ public class Blobworld {
 	
 	private static ArrayList<Node> blobsToSend;
 
-	public static void main(String[] args) 
-	{		
+    private static ArrayList<Node> bestSolution;
+
+    public static void main(String[] args) 
+    {		
 		//Initialize the variables.
-		graph = new Graph();
+    	graph = new Graph();
+    	System.out.println("Graph declared");
+        bestSolution = new ArrayList<Node>(0);
+        System.out.println("bestSolution declared");
+        
+        //Run findSolution as many times as you can in the given time, storing the best solution so far.
+        long startTime = System.nanoTime();
+        for(int run = 1; run <= 20; run++)
+        {
+        	//DEBUG: Print the number of nodes in the current bestSolution
+            System.out.println(bestSolution.size());
+            
+            //Reset the variables for the next findSolution call.
+            available = new boolean[graph.numberOfNodes];
+            for(int i = 0; i < available.length; i++)
+                available[i] = true;
+            blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
+            
+            findSolution();
+        }
 
-		available = new boolean[graph.numberOfNodes];
-		for(int i = 0; i < available.length; i++) {
-			available[i] = true;
-		}
-
-		blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
-		
-		findSolution();
+        System.out.println("Blobs to send size: " + bestSolution.size());
+		sortNodeNumber(bestSolution);
+        for(int i = 0; i < bestSolution.size(); i++)
+            System.out.println(bestSolution.get(i).nodeNumber);
 	}
 	
 	//Fills the blobsToSend list with the blobs that should be sent then sorts the list.
@@ -44,19 +61,18 @@ public class Blobworld {
 		int unavailableNodes = 0;
         while(unavailableNodes < graph.numberOfNodes)
         {
-
-            Node selectedNode = chooseByWeight(nodeArr); //A -1 might need to  be added to the endIndex.
+            Node selectedNode = chooseByWeight(nodeArr);
             blobsToSend.add(selectedNode);
             
             //Make the node we're taking and its adjacencies unavailable.
             available[selectedNode.nodeNumber] = false;
-            nodeArr[selectedNode.nodeNumber = null;
-            for(int i = 0; i < graph.adjacencyMatrix; i++)
+            nodeArr[selectedNode.nodeNumber] = null;
+            for(int i = 0; i < graph.adjacencyMatrix.length; i++)
             {
-            	if(graph.adjacencyMatrix[selectedNode.nodeNumber][j])
+            	if(graph.adjacencyMatrix[selectedNode.nodeNumber][i])
             	{
             		nodeArr[i] = null;
-            		unavailable++;
+            		unavailableNodes++;
             	}
             }
         }
@@ -71,7 +87,7 @@ public class Blobworld {
         }
 	}
 
-	public static Node chooseByWeight(ArrayList<Node> nodes, int endIndex) {
+	public static Node chooseByWeight(ArrayList<Node> nodes, int endIndex) throws Exception {
 		if(endIndex < 0)
 			throw new Exception();
 		if(endIndex == 0)
@@ -80,10 +96,11 @@ public class Blobworld {
 		for(int i = 0; i < endIndex; i++) {
 			n[i] = nodes.get(i);
 		}
-		return chooseByWeight(n;
+		return chooseByWeight(n);
 	}
 
 	public static Node chooseByWeight(Node[] nodes) {
+		int total = 0;
 		for(Node n: nodes) 
         {
 			if(n != null)

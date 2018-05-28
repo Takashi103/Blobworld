@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Graph Object
@@ -39,11 +37,12 @@ public class Graph  {
 				adjacencyMatrix[i][j] = false;
 
 		//Read in each edge.
-		while(input.hasNextInt()) {
-
+		Scanner nextLine = new Scanner(input.nextLine());
+		while(input.hasNext()) {
+			System.out.println("in while");
 			int edgeStart = input.nextInt();
 			int edgeEnd = input.nextInt();
-
+			System.out.println(edgeStart + " " + edgeEnd);
 			//If this edge does not exist already...
 			if(!adjacencyMatrix[edgeStart][edgeEnd] && !adjacencyMatrix[edgeEnd][edgeStart]) {
 				//...add the edge and update the degree counts.
@@ -55,7 +54,9 @@ public class Graph  {
 				nodes[edgeEnd].degree++;
 			}
 		}
-
+		
+		System.out.println("Test");
+		nextLine.close();
 		input.close();
 
 		//Initialize the List.
