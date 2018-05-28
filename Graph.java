@@ -18,10 +18,10 @@ public class Graph  {
 
 	public boolean useList = true;
 
-	public Graph() throws FileNotFoundException {
+	public Graph() {
 
 		Scanner input = new Scanner(System.in);
-		
+
 		numberOfNodes = input.nextInt();
 
 		//Initialize the Node Array.
@@ -38,12 +38,9 @@ public class Graph  {
 				adjacencyMatrix[i][j] = false;
 
 		//Read in each edge.
-		Scanner nextLine = new Scanner(input.nextLine());
 		while(input.hasNext()) {
-			System.out.println("in while");
 			int edgeStart = input.nextInt();
 			int edgeEnd = input.nextInt();
-			System.out.println(edgeStart + " " + edgeEnd);
 			//If this edge does not exist already...
 			if(!adjacencyMatrix[edgeStart][edgeEnd] && !adjacencyMatrix[edgeEnd][edgeStart]) {
 				//...add the edge and update the degree counts.
@@ -56,8 +53,6 @@ public class Graph  {
 			}
 		}
 		
-		System.out.println("Test");
-		nextLine.close();
 		input.close();
 
 		//Initialize the List.

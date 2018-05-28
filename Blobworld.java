@@ -21,19 +21,16 @@ public class Blobworld {
 
     private static ArrayList<Node> bestSolution;
 
-    public static void main(String[] args) throws FileNotFoundException 
+    public static void main(String[] args)
     {		
 		//Initialize the variables.
     	graph = new Graph();
-    	System.out.println("Graph declared");
         bestSolution = new ArrayList<Node>(0);
-        System.out.println("bestSolution declared");
         
         //Run findSolution as many times as you can in the given time, storing the best solution so far.
-        for(int run = 1; run <= 20; run++)
+        for(int run = 1; run <= 100; run++)
         {
         	//DEBUG: Print the number of nodes in the current bestSolution
-            System.out.println(bestSolution.size());
             
             //Reset the variables for the next findSolution call.
             available = new boolean[graph.numberOfNodes];
@@ -41,7 +38,19 @@ public class Blobworld {
                 available[i] = true;
             blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
             
-            findSolution();
+            findSolution(false);
+        }
+	for(int run = 1; run <= 100000; run++)
+        {
+        	//DEBUG: Print the number of nodes in the current bestSolution
+            
+            //Reset the variables for the next findSolution call.
+            available = new boolean[graph.numberOfNodes];
+            for(int i = 0; i < available.length; i++)
+                available[i] = true;
+            blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
+            
+            findSolution(true);
         }
 
         System.out.println("Blobs to send size: " + bestSolution.size());
@@ -51,27 +60,28 @@ public class Blobworld {
 	}
 	
 	//Fills the blobsToSend list with the blobs that should be sent then sorts the list.
-	public static void findSolution() 
+	public static void findSolution(boolean withWeights) 
 	{
         //Make a copy of the array with all the nodes.
 		Node[] nodeArr = new Node[graph.nodes.length];
 		System.arraycopy(graph.nodes, 0, nodeArr, 0, graph.nodes.length);
 		
-		System.out.println(nodeArr.length);
-		
 		//Choose the nodes to include in the solution.
 		int unavailableNodes = 0;
         while(unavailableNodes < graph.numberOfNodes)
         {
-        	System.out.println("nodeArr before choosing node.");
-        	for(Node n : nodeArr)
-    			System.out.print(n + " ");
-        	
-            Node selectedNode = chooseByWeight(nodeArr);
+            Node selectedNode;
+			if(withWeights)
+			{
+				selectedNode = chooseByWeight(nodeArr);
+			}
+			else
+			{
+				selectedNode = chooseRandom(nodeArr);
+			}
             blobsToSend.add(selectedNode);
             
             //Make the node we're taking and its adjacencies unavailable.
-            System.out.println(selectedNode);
             available[selectedNode.nodeNumber] = false;
             unavailableNodes++;
             nodeArr[selectedNode.nodeNumber] = null;
@@ -87,7 +97,8 @@ public class Blobworld {
         //Add the weights to the nodes used in the solution.
         for(Node node : blobsToSend)
         {
-        	node.weight++;
+			if(node.weight < blobsToSend.size())
+				node.weight = 1.0 + (double)(blobsToSend.size()) / 100.0;
         }
         if(blobsToSend.size() > bestSolution.size())
         {
@@ -108,7 +119,7 @@ public class Blobworld {
 	}
 
 	public static Node chooseByWeight(Node[] nodes) {
-		int total = 0;
+		double total = 0;
 		for(Node n: nodes) 
         {
 			if(n != null)
@@ -124,12 +135,20 @@ public class Blobworld {
 				count += nodes[i].weight;
 			}
 		}
-		System.out.println("Choose by weight returning null.");
 		for(Node n : nodes)
 			System.out.print(n + " ");
 		return null;
 	}
 
+	public static Node chooseRandom(Node[] nodes) {
+		int rand = (int)(Math.random() * (double)nodes.length);
+		while(nodes[rand] == null)
+		{
+			rand = (int)(Math.random() * (double)nodes.length);
+		}
+		return nodes[rand];
+	}
+	
 	public static void sortNodeNumber(ArrayList<Node> list)
 	{
 		for(int i = 1; i < list.size(); i++)
