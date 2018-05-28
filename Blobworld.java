@@ -1,4 +1,3 @@
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 // TODO : change Nodes from node[] to PriorityQueue
@@ -11,7 +10,8 @@ import java.util.ArrayList;
  */
 //In the current iteration, each blob will be given a weight equal to the largest solution it has been in.
 //findSolution will choose nodes to add to the graph randomly, prioritizing nodes with higher weights.
-public class Blobworld {
+public class Blobworld 
+{
 
 	private static Graph graph;
 
@@ -28,10 +28,11 @@ public class Blobworld {
         bestSolution = new ArrayList<Node>(0);
         
         //Run findSolution as many times as you can in the given time, storing the best solution so far.
-        for(int run = 1; run <= 100; run++)
+        int run = 1;
+        for(; run <= 100; run++)
         {
-        	//DEBUG: Print the number of nodes in the current bestSolution
-            
+        	if(run/100 == (double)run/100.0)
+        		System.out.println(run + " runs completed.");
             //Reset the variables for the next findSolution call.
             available = new boolean[graph.numberOfNodes];
             for(int i = 0; i < available.length; i++)
@@ -40,10 +41,10 @@ public class Blobworld {
             
             findSolution(false);
         }
-	for(int run = 1; run <= 100000; run++)
+        for(; run <= 100000; run++)
         {
-        	//DEBUG: Print the number of nodes in the current bestSolution
-            
+        	if(run/100 == (double)run/10000.0)
+        		System.out.println(run + " runs completed.");
             //Reset the variables for the next findSolution call.
             available = new boolean[graph.numberOfNodes];
             for(int i = 0; i < available.length; i++)
@@ -106,18 +107,6 @@ public class Blobworld {
         }
 	}
 
-	public static Node chooseByWeight(ArrayList<Node> nodes, int endIndex) throws Exception {
-		if(endIndex < 0)
-			throw new Exception();
-		if(endIndex == 0)
-			return nodes.get(0);
-		Node[] n = new Node[endIndex];
-		for(int i = 0; i < endIndex; i++) {
-			n[i] = nodes.get(i);
-		}
-		return chooseByWeight(n);
-	}
-
 	public static Node chooseByWeight(Node[] nodes) {
 		double total = 0;
 		for(Node n: nodes) 
@@ -165,34 +154,5 @@ public class Blobworld {
 		}
 	}	
 
-	public static void sortDegree(Node[] list)
-	{
-		for(int i = 1; i < list.length; i++)
-		{
-			for(int j = i - 1; j < list.length; j++)
-			{
-				if(list[i].degree < list[j].degree)
-				{					
-					Node temp = list[i];
-					list[i] = list[j];
-					list[j] = temp;
-				}
-			}
-		}
-	}	
-	
-	public static void updateAdjacentDegrees(Node[] nodeArr, Node node)
-	{
-		for(int i = 0; i < graph.numberOfNodes; i++)
-		{
-			//If this node is adjacent to the now unavailable node, decrease its degree by one.
-			if(graph.adjacencyMatrix[node.nodeNumber][i])
-			{
-				graph.nodes[i].degree--;
-				if(graph.nodes[i].degree < 0)
-					graph.nodes[i].degree = 0;
-			}
-		}
-	}
 }
 
