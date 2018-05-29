@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+//TODO: Add less than 1 weights, add weight degradation?, and try profiling code speed.
 
 /**
  * This class will find the solution of the Blobworld problem.
@@ -45,10 +46,8 @@ public class Blobworld
             findSolution(false);
         }
         //TODO RESET RUN NUMBER TO 100000.
-        for(; run <= 100000000; run++)
+        for(; run <= 10000000; run++)
         {
-        	if(bestSolution.size() == 8)
-        		break;
         	if(run/100 == (double)run/10000.0)
         	{
         		System.out.println(run + " runs completed.");
