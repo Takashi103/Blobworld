@@ -27,11 +27,7 @@ public class Blobworld
     	for(int i = 0; i < available.length; i++)
     		available[i] = true;
         
-    	findSolution();
-
-    	for(Node node : graph.nodes)
-    		System.out.println("Node " + node.nodeNumber + " has a degree of " + node.degree + " and a heat of " + node.heat + ".");
-    		
+    	findSolution();	
     	
         System.out.println("Blobs to send size: " + blobsToSend.size());
 		sortNodeNumber(blobsToSend);
@@ -66,6 +62,10 @@ public class Blobworld
 			}
 		}
 		
+		for(int i = 0; i < nodeArr.length; i++)
+    		System.out.println("Node " + nodeArr[i].nodeNumber + " has a degree of " + nodeArr[i].degree + " and a heat of " + nodeArr[i].heat + ".");
+    	
+		
 	}
 
 	public static void ripple(Node node)
@@ -73,28 +73,30 @@ public class Blobworld
 		//Ripple the node's heat outwards, increasing the heat of adjacent nodes and decreasing the heat of their adjacent nodes.
 		for(Node neighbour : graph.adjacencyList[node.nodeNumber])
 		{
-			neighbour.heat += node.heat * 0.1;
+			if(node.heat != 0)
+				neighbour.heat += node.heat * 0.1;
 		}
 		for(Node neighbour : graph.adjacencyList[node.nodeNumber])
 		{
 			for(Node secondNeighbour : graph.adjacencyList[neighbour.nodeNumber])
 			{
-				neighbour.heat -= node.heat * 0.1;
+				if(node.heat != 0)
+					secondNeighbour.heat -= node.heat * 0.1;
 			}
 		}
 	}
 	
 	public static void sortNodeNumber(ArrayList<Node> list)
 	{
-		for(int i = 1; i < list.size(); i++)
+		for(int i = 0; i < list.size(); i++)
 		{
-			for(int j = i - 1; j < list.size(); j++)
+			for(int j = 1; j < list.size(); j++)
 			{
-				if(list.get(i).nodeNumber < list.get(j).nodeNumber)
+				if(list.get(j).nodeNumber < list.get(j - 1).nodeNumber)
 				{					
-					Node temp = list.get(i);
-					list.set(i, list.get(j));
-					list.set(j, temp);
+					Node temp = list.get(j);
+					list.set(j, list.get(j - 1));
+					list.set(j - 1, temp);
 				}
 			}
 		}
@@ -102,15 +104,15 @@ public class Blobworld
 	
 	public static void sortDegree(Node[] list)
 	{
-		for(int i = 1; i < list.length; i++)
+		for(int i = 0; i < list.length; i++)
 		{
-			for(int j = i - 1; j < list.length; j++)
+			for(int j = 1; j < list.length; j++)
 			{
-				if(list[i].degree < list[j].degree)
+				if(list[j].degree > list[j - 1].degree)
 				{					
-					Node temp = list[i];
-					list[i] = list[j];
-					list[j] = temp;
+					Node temp = list[j];
+					list[j] = list[j - 1];
+					list[j - 1] = temp;
 				}
 			}
 		}
@@ -118,15 +120,15 @@ public class Blobworld
 	
 	public static void sortHeat(Node[] list)
 	{
-		for(int i = 1; i < list.length; i++)
+		for(int i = 0; i < list.length; i++)
 		{
-			for(int j = i - 1; j < list.length; j++)
+			for(int j = 1; j < list.length; j++)
 			{
-				if(list[i].heat < list[j].heat)
+				if(list[j].heat > list[j - 1].heat)
 				{					
-					Node temp = list[i];
-					list[i] = list[j];
-					list[j] = temp;
+					Node temp = list[j];
+					list[j] = list[j - 1];
+					list[j - 1] = temp;
 				}
 			}
 		}
