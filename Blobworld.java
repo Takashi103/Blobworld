@@ -18,6 +18,8 @@ public class Blobworld
 	private static ArrayList<Node> blobsToSend;
 
     private static ArrayList<Node> bestSolution;
+    
+    private static int noImprovementCount = 0;
 
     public static void main(String[] args)
     {		
@@ -25,12 +27,15 @@ public class Blobworld
     	graph = new Graph();
         bestSolution = new ArrayList<Node>(0);
         
-        //Run findSolution as many times as you can in the given time, storing the best solution so far.
+        //Run findSolution a set number of times, storing the best solution so far.
         int run = 1;
         for(; run <= 100; run++)
         {
         	if(run/100 == (double)run/100.0)
+        	{
         		System.out.println(run + " runs completed.");
+        		System.out.println("Best solution at run " + run + ": " + bestSolution.size());
+        	}
             //Reset the variables for the next findSolution call.
             available = new boolean[graph.numberOfNodes];
             for(int i = 0; i < available.length; i++)
@@ -39,10 +44,25 @@ public class Blobworld
             
             findSolution(false);
         }
-        for(; run <= 100000; run++)
+        //TODO RESET RUN NUMBER TO 100000.
+        for(; run <= 100000000; run++)
         {
+        	if(bestSolution.size() == 8)
+        		break;
         	if(run/100 == (double)run/10000.0)
+        	{
         		System.out.println(run + " runs completed.");
+        		System.out.println("Best solution at run " + run + ": " + bestSolution.size());
+        	}
+        	
+        	if(noImprovementCount > 1000)
+        	{
+        		noImprovementCount = 0;
+        		for(Node node : graph.nodes)
+        			node.weight = 1;
+        		System.out.println("Reseting all nodes weights after reaching predicted local max of " + bestSolution.size() + " at run " + run + ".");
+        	}
+        	
             //Reset the variables for the next findSolution call.
             available = new boolean[graph.numberOfNodes];
             for(int i = 0; i < available.length; i++)
@@ -96,12 +116,17 @@ public class Blobworld
         //Add the weights to the nodes used in the solution.
         for(Node node : blobsToSend)
         {
-			if(node.weight < blobsToSend.size())
+			if(node.weight < 1.0 + (double)(blobsToSend.size()) / 100.0)
 				node.weight = 1.0 + (double)(blobsToSend.size()) / 100.0;
         }
         if(blobsToSend.size() > bestSolution.size())
         {
             bestSolution = blobsToSend;
+            noImprovementCount = 0;
+        }
+        else
+        {
+        	noImprovementCount++;
         }
 	}
 
