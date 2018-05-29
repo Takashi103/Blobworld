@@ -73,6 +73,12 @@ public class Graph  {
 				j++;
 			}
 		}
+		
+		//DEBUG
+		for(Node node : nodes)
+		{
+			node.heat = node.degree;
+		}
 	}
 
 	public Node[] getNodes() {

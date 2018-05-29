@@ -18,146 +18,70 @@ public class Blobworld
 	
 	private static ArrayList<Node> blobsToSend;
 
-    private static ArrayList<Node> bestSolution;
-    
-    private static int noImprovementCount = 0;
-
     public static void main(String[] args)
     {		
 		//Initialize the variables.
     	graph = new Graph();
-        bestSolution = new ArrayList<Node>(0);
+    	blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
+    	available = new boolean[graph.numberOfNodes];
+    	for(int i = 0; i < available.length; i++)
+    		available[i] = true;
         
-        //Run findSolution a set number of times, storing the best solution so far.
-        int run = 1;
-        for(; run <= 100; run++)
-        {
-        	if(run/100 == (double)run/100.0)
-        	{
-        		System.out.println(run + " runs completed.");
-        		System.out.println("Best solution at run " + run + ": " + bestSolution.size());
-        	}
-            //Reset the variables for the next findSolution call.
-            available = new boolean[graph.numberOfNodes];
-            for(int i = 0; i < available.length; i++)
-                available[i] = true;
-            blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
-            
-            findSolution(false);
-        }
-        //TODO RESET RUN NUMBER TO 100000.
-        for(; run <= 10000000; run++)
-        {
-        	if(run/100 == (double)run/10000.0)
-        	{
-        		System.out.println(run + " runs completed.");
-        		System.out.println("Best solution at run " + run + ": " + bestSolution.size());
-        	}
-        	
-        	if(noImprovementCount > 1000)
-        	{
-        		noImprovementCount = 0;
-        		for(Node node : graph.nodes)
-        			node.weight = 1;
-        		System.out.println("Reseting all nodes weights after reaching predicted local max of " + bestSolution.size() + " at run " + run + ".");
-        	}
-        	
-            //Reset the variables for the next findSolution call.
-            available = new boolean[graph.numberOfNodes];
-            for(int i = 0; i < available.length; i++)
-                available[i] = true;
-            blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
-            
-            findSolution(true);
-        }
+    	findSolution();
 
-        System.out.println("Blobs to send size: " + bestSolution.size());
-		sortNodeNumber(bestSolution);
-        for(int i = 0; i < bestSolution.size(); i++)
-            System.out.println(bestSolution.get(i).nodeNumber);
+    	for(Node node : graph.nodes)
+    		System.out.println("Node " + node.nodeNumber + " has a degree of " + node.degree + " and a heat of " + node.heat + ".");
+    		
+    	
+        System.out.println("Blobs to send size: " + blobsToSend.size());
+		sortNodeNumber(blobsToSend);
+        for(int i = 0; i < blobsToSend.size(); i++)
+            System.out.println(blobsToSend.get(i).nodeNumber);
 	}
 	
 	//Fills the blobsToSend list with the blobs that should be sent then sorts the list.
-	public static void findSolution(boolean withWeights) 
+	public static void findSolution() 
 	{
         //Make a copy of the array with all the nodes.
 		Node[] nodeArr = new Node[graph.nodes.length];
 		System.arraycopy(graph.nodes, 0, nodeArr, 0, graph.nodes.length);
 		
-		//Choose the nodes to include in the solution.
-		int unavailableNodes = 0;
-        while(unavailableNodes < graph.numberOfNodes)
-        {
-            Node selectedNode;
-			if(withWeights)
-			{
-				selectedNode = chooseByWeight(nodeArr);
-			}
-			else
-			{
-				selectedNode = chooseRandom(nodeArr);
-			}
-            blobsToSend.add(selectedNode);
-            
-            //Make the node we're taking and its adjacencies unavailable.
-            available[selectedNode.nodeNumber] = false;
-            unavailableNodes++;
-            nodeArr[selectedNode.nodeNumber] = null;
-            for(Node node : graph.adjacencyList[selectedNode.nodeNumber])
-            {
-            	if(available [node.nodeNumber])
-            	{
-            		nodeArr[node.nodeNumber] = null;
-            		unavailableNodes++;
-            	}
-            }
-        }
-        //Add the weights to the nodes used in the solution.
-        for(Node node : blobsToSend)
-        {
-			if(node.weight < 1.0 + (double)(blobsToSend.size()) / 100.0)
-				node.weight = 1.0 + (double)(blobsToSend.size()) / 100.0;
-        }
-        if(blobsToSend.size() > bestSolution.size())
-        {
-            bestSolution = blobsToSend;
-            noImprovementCount = 0;
-        }
-        else
-        {
-        	noImprovementCount++;
-        }
-	}
-
-	public static Node chooseByWeight(Node[] nodes) {
-		double total = 0;
-		for(Node n: nodes) 
-        {
-			if(n != null)
-				total += n.weight;
-		}
-		double rand = Math.random() * total;
-		double count = 0.0;
-		for(int i = 0; i < nodes.length; i++) {
-			if(nodes[i] != null) 
-            {
-				if(count <= rand && rand <= (count + nodes[i].weight))
-					return nodes[i];
-				count += nodes[i].weight;
-			}
-		}
-		for(Node n : nodes)
-			System.out.print(n + " ");
-		return null;
-	}
-
-	public static Node chooseRandom(Node[] nodes) {
-		int rand = (int)(Math.random() * (double)nodes.length);
-		while(nodes[rand] == null)
+		//Ripple out the heats of all of the nodes.
+		for(Node node : nodeArr)
 		{
-			rand = (int)(Math.random() * (double)nodes.length);
+			ripple(node);
 		}
-		return nodes[rand];
+		
+		//Choose the nodes based on heat.
+		sortHeat(nodeArr);
+		for(int i = 0; i < nodeArr.length; i++)
+		{
+			if(available[nodeArr[i].nodeNumber]) 
+			{
+				blobsToSend.add(nodeArr[i]);
+				for(Node neighbour : graph.adjacencyList[nodeArr[i].nodeNumber])
+				{
+					available[neighbour.nodeNumber] = false;
+				}
+			}
+		}
+		
+	}
+
+	public static void ripple(Node node)
+	{
+		//Ripple the node's heat outwards, increasing the heat of adjacent nodes and decreasing the heat of their adjacent nodes.
+		for(Node neighbour : graph.adjacencyList[node.nodeNumber])
+		{
+			neighbour.heat += node.heat * 0.1;
+		}
+		for(Node neighbour : graph.adjacencyList[node.nodeNumber])
+		{
+			for(Node secondNeighbour : graph.adjacencyList[neighbour.nodeNumber])
+			{
+				neighbour.heat -= node.heat * 0.1;
+			}
+		}
 	}
 	
 	public static void sortNodeNumber(ArrayList<Node> list)
@@ -174,7 +98,39 @@ public class Blobworld
 				}
 			}
 		}
-	}	
+	}
+	
+	public static void sortDegree(Node[] list)
+	{
+		for(int i = 1; i < list.length; i++)
+		{
+			for(int j = i - 1; j < list.length; j++)
+			{
+				if(list[i].degree < list[j].degree)
+				{					
+					Node temp = list[i];
+					list[i] = list[j];
+					list[j] = temp;
+				}
+			}
+		}
+	}
+	
+	public static void sortHeat(Node[] list)
+	{
+		for(int i = 1; i < list.length; i++)
+		{
+			for(int j = i - 1; j < list.length; j++)
+			{
+				if(list[i].heat < list[j].heat)
+				{					
+					Node temp = list[i];
+					list[i] = list[j];
+					list[j] = temp;
+				}
+			}
+		}
+	}
 
 }
 
