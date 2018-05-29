@@ -29,7 +29,6 @@ public class Blobworld
         
     	findSolution();	
     	
-        System.out.println("Blobs to send size: " + blobsToSend.size());
 		sortNodeNumber(blobsToSend);
         for(int i = 0; i < blobsToSend.size(); i++)
             System.out.println(blobsToSend.get(i).nodeNumber);
