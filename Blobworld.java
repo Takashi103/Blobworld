@@ -32,11 +32,6 @@ public class Blobworld
         int run = 1;
         for(; run <= 100; run++)
         {
-        	if(run/100 == (double)run/100.0)
-        	{
-        		System.out.println(run + " runs completed.");
-        		System.out.println("Best solution at run " + run + ": " + bestSolution.size());
-        	}
             //Reset the variables for the next findSolution call.
             available = new boolean[graph.numberOfNodes];
             for(int i = 0; i < available.length; i++)
@@ -46,20 +41,13 @@ public class Blobworld
             findSolution(false);
         }
         //TODO RESET RUN NUMBER TO 100000.
-        for(; run <= 10000000; run++)
-        {
-        	if(run/100 == (double)run/10000.0)
-        	{
-        		System.out.println(run + " runs completed.");
-        		System.out.println("Best solution at run " + run + ": " + bestSolution.size());
-        	}
-        	
+        for(; run <= 100000; run++)
+        {	
         	if(noImprovementCount > 1000)
         	{
         		noImprovementCount = 0;
         		for(Node node : graph.nodes)
         			node.weight = 1;
-        		System.out.println("Reseting all nodes weights after reaching predicted local max of " + bestSolution.size() + " at run " + run + ".");
         	}
         	
             //Reset the variables for the next findSolution call.
