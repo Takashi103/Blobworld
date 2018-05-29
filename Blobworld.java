@@ -33,6 +33,9 @@ public class Blobworld
 		sortNodeNumber(blobsToSend);
         for(int i = 0; i < blobsToSend.size(); i++)
             System.out.println(blobsToSend.get(i).nodeNumber);
+        
+        //DEBUG
+        checkSolution();
 	}
 	
 	//Fills the blobsToSend list with the blobs that should be sent then sorts the list.
@@ -62,9 +65,11 @@ public class Blobworld
 			}
 		}
 		
+		//DEBUG
+		/*
 		for(int i = 0; i < nodeArr.length; i++)
     		System.out.println("Node " + nodeArr[i].nodeNumber + " has a degree of " + nodeArr[i].degree + " and a heat of " + nodeArr[i].heat + ".");
-    	
+    	*/
 		
 	}
 
@@ -133,6 +138,23 @@ public class Blobworld
 			}
 		}
 	}
-
+			
+	public static void checkSolution()
+	{
+		for(Node node : blobsToSend)
+		{
+			for(int i = 0; i < blobsToSend.size(); i++)
+			{
+				if(graph.adjacencyMatrix[node.nodeNumber][blobsToSend.get(i).nodeNumber])
+				{
+                    //System.out.println("Vertices " + node.nodeNumber + " and " + blobsToSend.get(i) + " are adjacent.");
+                    return;
+				}
+			}
+		}
+		//System.out.print("This solution with " +  blobsToSend.size() + " nodes is valid!");
+		
+	}
+	
 }
 

@@ -77,7 +77,7 @@ public class Graph  {
 		//DEBUG
 		for(Node node : nodes)
 		{
-			node.heat = node.degree;
+			node.heat = -node.degree;
 		}
 	}
 
