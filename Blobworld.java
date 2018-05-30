@@ -102,19 +102,22 @@ public class Blobworld
 
 	public static void ripple(Node node)
 	{
-		//Ripple the node's heat outwards, increasing the heat of adjacent nodes and decreasing the heat of their adjacent nodes.
-		for(Node neighbour : graph.adjacencyList[node.nodeNumber])
-		{
-			if(node.heat != 0)
-				neighbour.heat += node.heat * rippleStrength;
-		}
-		
-		for(Node neighbour : graph.adjacencyList[node.nodeNumber])
-		{
-			for(Node secondNeighbour : graph.adjacencyList[neighbour.nodeNumber])
+        if(rippleStrength != 0)
+        {
+			//Ripple the node's heat outwards, increasing the heat of adjacent nodes and decreasing the heat of their adjacent nodes.
+			for(Node neighbour : graph.adjacencyList[node.nodeNumber])
 			{
 				if(node.heat != 0)
-					secondNeighbour.heat -= node.heat * rippleStrength;
+					neighbour.heat += node.heat * rippleStrength;
+			}
+			
+			for(Node neighbour : graph.adjacencyList[node.nodeNumber])
+			{
+				for(Node secondNeighbour : graph.adjacencyList[neighbour.nodeNumber])
+				{
+					if(node.heat != 0)
+						secondNeighbour.heat -= node.heat * rippleStrength;
+				}
 			}
 		}
 		
