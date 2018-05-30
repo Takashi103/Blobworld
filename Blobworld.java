@@ -13,25 +13,33 @@ public class Blobworld
 {
 
 	private static Graph graph;
-
-	private static boolean[] available;
 	
-	private static ArrayList<Node> blobsToSend;
+	private static ArrayList<Node> bestSolution = new ArrayList<Node>(0);
+	
+	//DEBUG
+	private static double bestRippleStrength = 0.0;
+	
+	private static double rippleStrength;
+	private static double rippleIncrement = 0.01;
 
     public static void main(String[] args)
     {		
 		//Initialize the variables.
     	graph = new Graph();
-    	blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
-    	available = new boolean[graph.numberOfNodes];
-    	for(int i = 0; i < available.length; i++)
-    		available[i] = true;
         
-    	findSolution();	
+    	for(double strength = rippleIncrement; strength <= 0.25; strength += rippleIncrement)
+    	{
+    		rippleStrength = (double)Math.round(strength * 100) / 100.0	;
+    		findSolution();
+    	}
     	
-		sortNodeNumber(blobsToSend);
-        for(int i = 0; i < blobsToSend.size(); i++)
-            System.out.println(blobsToSend.get(i).nodeNumber);
+    	//DEBUG
+    	System.out.println("Blobs to send: " + bestSolution.size());
+    	System.out.println("Ripple strength: " + bestRippleStrength);
+    	
+		sortNodeNumber(bestSolution);
+        for(int i = 0; i < bestSolution.size(); i++)
+            System.out.println(bestSolution.get(i).nodeNumber);
         
         //DEBUG
         checkSolution();
@@ -43,6 +51,12 @@ public class Blobworld
         //Make a copy of the array with all the nodes.
 		Node[] nodeArr = new Node[graph.nodes.length];
 		System.arraycopy(graph.nodes, 0, nodeArr, 0, graph.nodes.length);
+		
+		boolean[] available = new boolean[graph.numberOfNodes];
+    	for(int i = 0; i < available.length; i++)
+    		available[i] = true;
+		
+		ArrayList<Node> blobsToSend = new ArrayList<Node>(graph.numberOfNodes);
 		
 		//Ripple out the heats of all of the nodes.
 		for(Node node : nodeArr)
@@ -64,6 +78,13 @@ public class Blobworld
 			}
 		}
 		
+		System.out.println("Found " + blobsToSend.size() + " blobs with a current rippleStrength of " + rippleStrength +".");
+		if(blobsToSend.size() > bestSolution.size())
+		{
+			bestSolution = blobsToSend;
+			//DEBUG
+			bestRippleStrength = rippleStrength;
+		}
 		//DEBUG
 		/*
 		for(int i = 0; i < nodeArr.length; i++)
@@ -78,16 +99,29 @@ public class Blobworld
 		for(Node neighbour : graph.adjacencyList[node.nodeNumber])
 		{
 			if(node.heat != 0)
-				neighbour.heat += node.heat * 0.1;
+				neighbour.heat += node.heat * rippleStrength;
 		}
+		
 		for(Node neighbour : graph.adjacencyList[node.nodeNumber])
 		{
 			for(Node secondNeighbour : graph.adjacencyList[neighbour.nodeNumber])
 			{
 				if(node.heat != 0)
-					secondNeighbour.heat -= node.heat * 0.1;
+					secondNeighbour.heat -= node.heat * rippleStrength;
 			}
 		}
+		
+		/*for(Node neighbour : graph.adjacencyList[node.nodeNumber])
+		{
+			for(Node secondNeighbour : graph.adjacencyList[neighbour.nodeNumber])
+			{
+				for(Node thirdNeighbour : graph.adjacencyList[secondNeighbour.nodeNumber])
+				{
+					if(node.heat != 0)
+						thirdNeighbour.heat += secondNeighbour.heat * 0.1;
+				}
+			}
+		}*/
 	}
 	
 	public static void sortNodeNumber(ArrayList<Node> list)
@@ -146,7 +180,7 @@ public class Blobworld
 			{
 				if(graph.adjacencyMatrix[node.nodeNumber][blobsToSend.get(i).nodeNumber])
 				{
-                    //System.out.println("Vertices " + node.nodeNumber + " and " + blobsToSend.get(i) + " are adjacent.");
+                    System.out.println("Vertices " + node.nodeNumber + " and " + blobsToSend.get(i) + " are adjacent.");
                     return;
 				}
 			}
