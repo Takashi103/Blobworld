@@ -20,22 +20,24 @@ public class Blobworld
 	private static double bestRippleStrength = 0.0;
 	
 	private static double rippleStrength;
-	private static double rippleIncrement = 0.01;
+	private static double rippleIncrement = 0.025;
 
     public static void main(String[] args)
     {		
 		//Initialize the variables.
     	graph = new Graph();
         
-    	for(double strength = rippleIncrement; strength <= 0.25; strength += rippleIncrement)
+    	for(double strength = 0; strength <= 0.15; strength += rippleIncrement)
     	{
-    		rippleStrength = (double)Math.round(strength * 100) / 100.0	;
+    		rippleStrength = strength;
     		findSolution();
     	}
     	
+    	//findSolution();
+    	
     	//DEBUG
-    	System.out.println("Blobs to send: " + bestSolution.size());
-    	System.out.println("Ripple strength: " + bestRippleStrength);
+    	//System.out.println("Blobs to send: " + bestSolution.size());
+    	//System.out.println("Ripple strength: " + bestRippleStrength);
     	
 		sortNodeNumber(bestSolution);
         for(int i = 0; i < bestSolution.size(); i++)
@@ -51,6 +53,11 @@ public class Blobworld
         //Make a copy of the array with all the nodes.
 		Node[] nodeArr = new Node[graph.nodes.length];
 		System.arraycopy(graph.nodes, 0, nodeArr, 0, graph.nodes.length);
+		
+		for(Node node : nodeArr)
+		{
+			node.heat = -node.degree;
+		}
 		
 		boolean[] available = new boolean[graph.numberOfNodes];
     	for(int i = 0; i < available.length; i++)
@@ -78,7 +85,7 @@ public class Blobworld
 			}
 		}
 		
-		System.out.println("Found " + blobsToSend.size() + " blobs with a current rippleStrength of " + rippleStrength +".");
+		//System.out.println("Found " + blobsToSend.size() + " blobs with a current rippleStrength of " + rippleStrength +".");
 		if(blobsToSend.size() > bestSolution.size())
 		{
 			bestSolution = blobsToSend;
@@ -174,13 +181,13 @@ public class Blobworld
 			
 	public static void checkSolution()
 	{
-		for(Node node : blobsToSend)
+		for(Node node : bestSolution)
 		{
-			for(int i = 0; i < blobsToSend.size(); i++)
+			for(int i = 0; i < bestSolution.size(); i++)
 			{
-				if(graph.adjacencyMatrix[node.nodeNumber][blobsToSend.get(i).nodeNumber])
+				if(graph.adjacencyMatrix[node.nodeNumber][bestSolution.get(i).nodeNumber])
 				{
-                    System.out.println("Vertices " + node.nodeNumber + " and " + blobsToSend.get(i) + " are adjacent.");
+                    System.out.println("Vertices " + node.nodeNumber + " and " + bestSolution.get(i) + " are adjacent.");
                     return;
 				}
 			}

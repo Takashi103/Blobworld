@@ -31,10 +31,6 @@ public class Graph  {
 
 		//Initialize the matrix.
 		adjacencyMatrix = new boolean[numberOfNodes][numberOfNodes];
-		//Set all edges to false.
-		for(int i = 0; i < numberOfNodes; i++)
-			for(int j = 0; j < numberOfNodes; j++)
-				adjacencyMatrix[i][j] = false;
 
 		//Read in each edge.
 		while(input.hasNext()) {
@@ -57,27 +53,20 @@ public class Graph  {
 		//Initialize the List.
 		adjacencyList = new Node[numberOfNodes][];
 		for(int i = 0; i < numberOfNodes; i++)
+		{
 			adjacencyList[i] = new Node[nodes[i].degree];
-
-		//Add the edges in the adjacency Matrix to the list.
-		for(int i = 0; i < numberOfNodes; i++) {
-
+			
 			int currentIndex = 0;
 			int j = 0;
 
-			while(j < numberOfNodes) {
+			while(j < numberOfNodes) 
+			{
 
 				if(adjacencyMatrix[i][j])
 					adjacencyList[i][currentIndex++] = nodes[j];
 
 				j++;
 			}
-		}
-		
-		for(Node node : nodes)
-		{
-			node.originalHeat = -node.degree;
-			node.heat = -node.degree;
 		}
 	}
 
